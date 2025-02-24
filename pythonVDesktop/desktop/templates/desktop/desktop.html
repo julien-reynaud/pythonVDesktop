@@ -1,0 +1,47 @@
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bureau Virtuel</title>
+    <style>
+        body {
+            background: url('https://static.vecteezy.com/ti/photos-gratuite/t1/11412771-resume-vecteur-fond-bg-violet-bleu-rose-gradient-points-modele-courbe-lignes-photo.jpg') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .desktop {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .icon {
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        {% for shortcut in shortcuts %}
+            <div class="icon" style="top: {{ forloop.counter0|add:10 }}vh; left: {{ forloop.counter0|add:10 }}vw;" onclick="openApp('{{ shortcut.command }}')">
+                <img src="{{ shortcut.icon }}" width="50"><br>
+                <span>{{ shortcut.name }}</span>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function openApp(url) {
+            window.open(url, "_blank");  // Ouvre le lien de l'application dans un nouvel onglet
+        }
+    </script>
+</body>
+</html>
