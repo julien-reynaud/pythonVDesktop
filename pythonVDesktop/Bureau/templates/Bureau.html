@@ -12,10 +12,11 @@
       background: #1e1e2f;
       color: #fff;
       font-family: Arial, sans-serif;
+      overflow: hidden; 
     }
 
     .desktop {
-      height: 100vh;
+      height: calc(100vh - 40px);
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
       gap: 20px;
@@ -56,6 +57,7 @@
 
     .window-content {
       padding: 16px;
+      height: 90%;
     }
 
     .taskbar {
@@ -74,24 +76,86 @@
         margin-right: 10px;
     }
 
+    .chat-window {
+    display: none; /* Masquer la fenêtre de chat par défaut */
+    position: absolute;
+    width: 400px;
+    height: 300px;
+    background: #2a2a3d;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+   }
+
+   .window, .chat-window {
+    position: absolute;
+    width: 400px;
+    height: 300px;
+    background: #2a2a3d;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+   }
+
+   .large-window {
+    width: 800px;
+    height: 600px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    }
+
+
   </style>
 </head>
 <body>
   <div class="desktop">
-      
+    {% load static %}
     <div class="icon" onclick="openWindow()">
-      <img src="/static/pictures/folder.png" alt="Folder">
+      <img src="/static/folder.png" title="explore icons" alt="Folder Icon" style="width: 50px; height: 50px;">
       <p>Files</p>
-    </div>
-
+    </div>    
+    
     <div class="icon" onclick="openStockWindow()">
-      <img src="/static/pictures/stock.png" alt="Stock Market">
+      <img src="/static/stock.png" alt="Stock Market">
       <p>Bourse</p>
     </div>
       
       <div class="icon" onclick="openChat()">
-      <img src="/static/pictures/chat.png" alt="Chat">
+      <img src="/static/chatbot.png" alt="Chat">
       <p>Chat Bot</p>
+    </div>
+
+    <div class="icon" onclick="openAgenda()">
+      <img src="/static/agenda.png" alt="Agenda">
+      <p>Agenda</p>
+    </div>
+
+    <div class="icon" onclick="openFlux()">
+      <img src="/static/world-news.png" alt="Flux">
+      <p>Flux</p>
+    </div>  
+    
+    <div class="icon" onclick="openMeteo()">
+      <img src="/static/sun.png" alt="Météo">
+      <p>Météo</p>
+    </div>
+    
+    <div class="icon" onclick="openVideoWindow()">
+      <img src="/static/youtube.png" alt="Video">
+      <p>Player Video</p>
+    </div>
+    
+    <div class="icon" onclick="openPostitWindow()">
+      <img src="/static/sticky-note.png" alt="Post-it">
+      <p>Post-it</p>
+    </div>
+
+    <div class="icon" onclick="openTerminalWindow()">
+      <img src="/static/terminal.png" alt="Terminal">
+      <p>Terminal</p>
     </div>
 
     <div id="window" class="window">
@@ -124,6 +188,68 @@
       <div class="chat-content" id="chat-content"></div>
       <input type="text" class="chat-input" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMessage()">
     </div>
+
+    <div id="agenda-window" class="window large-window">
+      <div class="window-header">
+        <span>Agenda</span>
+        <button onclick="closeAgenda()">X</button>
+      </div>
+      <div class="window-content" style="height: 90%;">
+        <iframe id="agenda-frame" src="/agenda/" style="width: 100%; height: 100%; border: none;"></iframe>
+      </div>
+    </div>
+    
+    <div id="flux-window" class="window large-window">
+      <div class="window-header">
+        <span>Flux</span>
+        <button onclick="closeFlux()">X</button>
+      </div>
+      <div class="window-content" style="height: 90%;">
+        <iframe id="flux-frame" src="/flux/" style="width: 100%; height: 100%; border: none;"></iframe>
+      </div>
+    </div>
+
+    <div id="meteo-window" class="window">
+      <div class="window-header">
+        <span>Météo</span>
+        <button onclick="closeMeteo()">X</button>
+      </div>
+      <div class="window-content" style="height: 580px; width: 370px;">
+        <iframe id="meteo-frame" src="/meteo/" style="width: 100%; height: 100%; border: none;"></iframe>
+      </div>
+    </div>
+    
+    <div id="video-window" class="window large-window">
+      <div class="window-header">
+        <span>Player Video</span>
+        <button onclick="closeVideoWindow()">X</button>
+      </div>
+      <div class="window-content">
+        <iframe width="100%" height="100%" src="{% url 'player_video:display_video' %}" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    <div id="postit-window" class="window large-window">
+      <div class="window-header">
+        <span>Post-it</span>
+        <button onclick="closePostitWindow()">X</button>
+      </div>
+      <div class="window-content">
+        <iframe width="100%" height="100%" src="{% url 'postits:Postit' %}" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    <div id="terminal-window" class="window large-window">
+      <div class="window-header">
+        <span>Terminal</span>
+        <button onclick="closeTerminalWindow()">X</button>
+      </div>
+      <div class="window-content">
+        <iframe width="100%" height="100%" src="{% url 'terminal:Terminal' %}" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    
   </div>
 
   <div class="taskbar">
@@ -154,6 +280,54 @@
 
     function closeStockWindow() {
       document.getElementById('stock-window').style.display = 'none';
+    }
+
+    function openAgenda() {
+      document.getElementById('agenda-window').style.display = 'block';
+    }
+
+    function closeAgenda() {
+      document.getElementById('agenda-window').style.display = 'none';
+    }
+
+    function openFlux() {
+    document.getElementById('flux-window').style.display = 'block';
+    }
+
+    function closeFlux() {
+        document.getElementById('flux-window').style.display = 'none';
+    }
+
+    function openMeteo() {
+    document.getElementById('meteo-window').style.display = 'block';
+    }
+
+    function closeMeteo() {
+        document.getElementById('meteo-window').style.display = 'none';
+    }
+
+    function openVideoWindow() {
+      document.getElementById('video-window').style.display = 'block';
+    }
+
+    function closeVideoWindow() {
+      document.getElementById('video-window').style.display = 'none';
+    }
+
+    function openPostitWindow() {
+      document.getElementById('postit-window').style.display = 'block';
+    }
+
+    function closePostitWindow() {
+      document.getElementById('postit-window').style.display = 'none';
+    }
+
+    function openTerminalWindow() {
+      document.getElementById('terminal-window').style.display = 'block';
+    }
+
+    function closeTerminalWindow() {
+      document.getElementById('terminal-window').style.display = 'none';
     }
 
     function searchStock() {
@@ -248,7 +422,13 @@
       return cookieValue;
     }
 
-
+    makeDraggable(document.getElementById('chat-window'));
+    makeDraggable(document.getElementById('agenda-window'));
+    makeDraggable(document.getElementById('flux-window'));
+    makeDraggable(document.getElementById('meteo-window'));
+    makeDraggable(document.getElementById('video-window'));
+    makeDraggable(document.getElementById('postit-window'));
+    makeDraggable(document.getElementById('terminal-window'));
 
   </script>
 </body>

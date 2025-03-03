@@ -17,39 +17,41 @@
     
         .container {
             background: white;
-            padding: 20px;
+            padding: 15px 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 350px;
+            width: 320px;
             text-align: center;
+            max-height: 400px; /* Limite la hauteur du conteneur */
+            overflow: auto; /* Permet de défiler si nécessaire */
         }
     
         h1 {
-            font-size: 22px;
-            margin-bottom: 15px;
+            font-size: 20px;
+            margin-bottom: 10px;
             color: #333;
         }
     
         form {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px; /* Réduit l'espace entre les champs */
         }
     
         input, textarea, select {
             width: 100%;
-            padding: 8px;
+            padding: 6px; /* Réduit l'espace interne des champs */
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 14px; /* Réduit la taille des polices */
         }
     
         button {
             background-color: #42a5f5;
             color: white;
             border: none;
-            padding: 10px;
-            font-size: 16px;
+            padding: 8px;
+            font-size: 14px;
             cursor: pointer;
             border-radius: 5px;
             transition: background 0.3s;
