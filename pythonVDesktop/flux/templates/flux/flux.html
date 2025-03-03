@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualités</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .news-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .news-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-item h3 {
+            font-size: 1.2em;
+            margin: 0;
+        }
+
+        .news-item p {
+            color: #555;
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+
+        .news-item a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+        .news-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .error {
+            color: red;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .filters {
+            margin-bottom: 20px;
+        }
+
+        .filters select {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        .filters button {
+            padding: 8px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .filters button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Positionner le bouton de fermeture en haut à droite */
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        /* Changer la couleur du bouton au survol */
+        .close-btn:hover {
+            background-color: #e60000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Actualités</h1>
+
+    <div class="filters">
+        <form method="get">
+            <label for="category">Catégorie:</label>
+            <select name="category" id="category">
+                <option value="general" {% if category == "general" %}selected{% endif %}>Général</option>
+                <option value="business" {% if category == "business" %}selected{% endif %}>Affaires</option>
+                <option value="entertainment" {% if category == "entertainment" %}selected{% endif %}>Divertissement</option>
+                <option value="health" {% if category == "health" %}selected{% endif %}>Santé</option>
+                <option value="science" {% if category == "science" %}selected{% endif %}>Science</option>
+                <option value="sports" {% if category == "sports" %}selected{% endif %}>Sport</option>
+                <option value="technology" {% if category == "technology" %}selected{% endif %}>Technologie</option>
+            </select>
+
+            <button type="submit">Filtrer</button>
+        </form>
+    </div>
+
+    {% if articles %}
+        <div class="news-container">
+            {% for article in articles %}
+                <div class="news-item">
+                    {% if article.urlToImage %}
+                        <img src="{{ article.urlToImage }}" alt="Image de l'actualité">
+                    {% endif %}
+                    <h3><a href="{{ article.url }}" target="_blank">{{ article.title }}</a></h3>
+                    <p>{{ article.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="error">❌ Aucune actualité disponible ou une erreur est survenue.</p>
+    {% endif %}
+
+    <button class="close-btn" onclick="window.location.href='/';">&times;</button>
+</body>
+</html>

@@ -3,3 +3,6 @@ npm install @fullcalendar/core @fullcalendar/daygrid @fullcalendar/interaction
 
 Pour la meteo:
 pip install requests
+
+Pour flux:
+pip install requests

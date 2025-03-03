@@ -55,6 +55,23 @@
             border: none;
             border-radius: 5px;
         }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .close-btn:hover {
+            background-color: #e60000;
+        }
     </style>
 </head>
 <body>
@@ -78,5 +95,6 @@
         {% endif %}
     </div>
 
+    <button class="close-btn" onclick="window.location.href='/';">&times;</button>
 </body>
 </html>
