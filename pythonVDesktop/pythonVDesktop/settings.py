@@ -61,7 +61,7 @@ ROOT_URLCONF = "pythonVDesktop.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR, "agenda", "meteo", "flux", "player_video"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
