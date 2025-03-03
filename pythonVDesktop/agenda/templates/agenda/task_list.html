@@ -108,9 +108,6 @@
 </head>
 <body>
 
-    <!-- Bouton de fermeture -->
-    <button class="close-btn" onclick="window.location.href='/';">&times;</button>
-
     <div class="container">
         <!-- Liste des tâches -->
         <div class="task-list">
@@ -120,8 +117,8 @@
                 <div class="task">
                     <strong>{{ task.title }}</strong> - 📅 {{ task.due_date }}
                     <br>
-                    <a href="{% url 'edit_task' task.id %}">✏️ Modifier</a> |
-                    <a href="{% url 'delete_task' task.id %}" style="color: red;">❌ Supprimer</a>
+                    <a href="{% url 'edit_task' task.id %}">✏️</a> |
+                    <a href="{% url 'delete_task' task.id %}" style="color: red;">❌</a>
                 </div>
             {% empty %}
                 <p>Aucune tâche pour l'instant.</p>
