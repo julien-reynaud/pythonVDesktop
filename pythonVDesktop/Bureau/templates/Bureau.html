@@ -81,34 +81,75 @@
     }
 
     .chat-window {
-    display: none; /* Masquer la fenêtre de chat par défaut */
-    position: absolute;
-    width: 400px;
-    height: 300px;
-    background: #2a2a3d;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-   }
+      display: none;
+      position: absolute;
+      width: 400px;
+      height: 300px;
+      background: #2a2a3d;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
 
-   .window, .chat-window {
-    position: absolute;
-    width: 400px;
-    height: 300px;
-    background: #2a2a3d;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    display: none;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-   }
+    .window, .chat-window {
+      position: absolute;
+      width: 400px;
+      height: 300px;
+      background: #2a2a3d;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      display: none;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
 
-   .large-window {
-    width: 800px;
-    height: 600px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    .large-window {
+      width: 800px;
+      height: 600px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .start-menu {
+      position: absolute;
+      bottom: 40px;
+      left: 20px;
+      background: #2a2a3d;
+      padding: 10px;
+      display: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      width: 800px;
+      height: 80px;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .start-menu .icon {
+      width: 60px;
+      height: 60px;
+      text-align: center;
+      margin: 10px;
+    }
+
+    .start-menu .icon img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .start-menu-button {
+      cursor: pointer;
+      padding: 8px 12px;
+      background: #3b3b5c;
+      border: none;
+      color: white;
+      font-size: 14px;
+      border-radius: 5px;
+    }
+
+    .start-menu-button:hover {
+      background: #4a4a6b;
     }
 
 
@@ -126,8 +167,8 @@
       <img src="/static/stock.png" alt="Stock Market">
       <p>Bourse</p>
     </div>
-      
-      <div class="icon" onclick="openChat()">
+    
+    <div class="icon" onclick="openChat()">
       <img src="/static/chatbot.png" alt="Chat">
       <p>Chat Bot</p>
     </div>
@@ -188,8 +229,8 @@
         <p id="stock-result">Chargement des données...</p>
       </div>
     </div>
-      
-      <div id="chat-window" class="chat-window">
+
+    <div id="chat-window" class="chat-window">
       <div class="window-header">
         <span>Chat Bot</span>
         <button onclick="closeChat()">X</button>
@@ -260,44 +301,82 @@
 
     <div id="jeu-window" class="window large-window" style="width: 100%; height: 100%;">
       <div class="window-header">
-          <span>Jeu</span>
-          <button onclick="closeJeuWindow()">X</button>
+        <span>Jeu</span>
+        <button onclick="closeJeuWindow()">X</button>
       </div>
       <div class="window-content">
-          <iframe width="100%" height="100%" src="{% url 'jeu:affiche_jeu' %}" frameborder="0"></iframe>
+        <iframe width="100%" height="100%" src="{% url 'jeu:affiche_jeu' %}" frameborder="0"></iframe>
       </div>
     </div>
     
   </div>
 
   <div class="taskbar">
-    <span>Start</span>
+    <span class="start-menu-button" onclick="toggleStartMenu()">Start</span>
     <span id="taskbar-time"></span>
   </div>
 
+  <div class="start-menu" id="start-menu">
+    <div class="icon" onclick="openWindow()">
+      <img src="/static/folder.png" title="explore icons" alt="Folder Icon" class="icon">
+    </div>
+    <div class="icon" onclick="openStockWindow()">
+      <img src="/static/stock.png" alt="Stock Market" class="icon">
+    </div>
+    <div class="icon" onclick="openChat()">
+      <img src="/static/chatbot.png" alt="Chat" class="icon">
+    </div>
+    <div class="icon" onclick="openAgenda()">
+      <img src="/static/agenda.png" alt="Agenda" class="icon">
+    </div>
+    <div class="icon" onclick="openFlux()">
+      <img src="/static/world-news.png" alt="Flux" class="icon">
+    </div>
+    <div class="icon" onclick="openMeteo()">
+      <img src="/static/sun.png" alt="Météo" class="icon">
+    </div>
+    <div class="icon" onclick="openVideoWindow()">
+      <img src="/static/youtube.png" alt="Video" class="icon">
+    </div>
+    <div class="icon" onclick="openPostitWindow()">
+      <img src="/static/sticky-note.png" alt="Post-it" class="icon">
+    </div>
+    <div class="icon" onclick="openTerminalWindow()">
+      <img src="/static/terminal.png" alt="Terminal" class="icon">
+    </div>
+    <div class="icon" onclick="openJeuWindow()">
+      <img src="/static/ping-pong.png" alt="Game" class="icon">
+    </div>
+  </div>
+
   <script>
-    function openWindow() {
-      document.getElementById('window').style.display = 'block';
+    function toggleStartMenu() {
+      const menu = document.getElementById('start-menu');
+      menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
     }
 
     function closeWindow() {
       document.getElementById('window').style.display = 'none';
     }
+
+    function openWindow() {
+      document.getElementById('window').style.display = 'block';
+    }
     
-    function openChat() {
-      document.getElementById('chat-window').style.display = 'block';
-    }
-
-    function closeChat() {
-      document.getElementById('chat-window').style.display = 'none';
-    }
-
     function openStockWindow() {
       document.getElementById('stock-window').style.display = 'block';
     }
 
     function closeStockWindow() {
       document.getElementById('stock-window').style.display = 'none';
+    }
+
+    function openChat() {
+      document.getElementById('chat-window').style.display = 'block';
+    }
+
+    function closeChat() {
+      document.getElementById('chat-window').style.display = 'none';
     }
 
     function openAgenda() {
@@ -309,19 +388,19 @@
     }
 
     function openFlux() {
-    document.getElementById('flux-window').style.display = 'block';
+      document.getElementById('flux-window').style.display = 'block';
     }
 
     function closeFlux() {
-        document.getElementById('flux-window').style.display = 'none';
+      document.getElementById('flux-window').style.display = 'none';
     }
 
     function openMeteo() {
-    document.getElementById('meteo-window').style.display = 'block';
+      document.getElementById('meteo-window').style.display = 'block';
     }
 
     function closeMeteo() {
-        document.getElementById('meteo-window').style.display = 'none';
+      document.getElementById('meteo-window').style.display = 'none';
     }
 
     function openVideoWindow() {
@@ -349,113 +428,39 @@
     }
 
     function openJeuWindow() {
-    document.getElementById('jeu-window').style.display = 'block';
+      document.getElementById('jeu-window').style.display = 'block';
     }
 
     function closeJeuWindow() {
-        document.getElementById('jeu-window').style.display = 'none';
+      document.getElementById('jeu-window').style.display = 'none';
     }
 
-    function searchStock() {
-  const symbol = document.getElementById('stock-search').value;
-  fetch(`/stock-data/?symbol=${symbol}`)
-    .then(response => response.json())
-    .then(data => {
-      if (data.price) {
-        document.getElementById('stock-result').innerText = `Prix actuel de ${symbol.toUpperCase()} : ${data.price} $`;
-      } else {
-        document.getElementById('stock-result').innerText = 'Données non disponibles';
-      }
-    })
-    .catch(() => {
-      document.getElementById('stock-result').innerText = 'Erreur lors de la récupération des données';
-    });
-    }
-      function makeDraggable(element) {
-        let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
-
-        const header = element.querySelector('.window-header');
-        header.style.cursor = 'move';
-
-        header.onmousedown = (e) => {
-            e.preventDefault();
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-
-            document.onmousemove = (e) => {
-            offsetX = e.clientX - mouseX;
-            offsetY = e.clientY - mouseY;
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-
-            element.style.top = (element.offsetTop + offsetY) + 'px';
-            element.style.left = (element.offsetLeft + offsetX) + 'px';
-            };
-
-            document.onmouseup = () => {
-            document.onmousemove = null;
-            document.onmouseup = null;
-            };
-        };
-        }
-
-        document.querySelectorAll('.window').forEach(makeDraggable);
-      
     function updateTime() {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('taskbar-time').innerText = timeString;
+      const date = new Date();
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      document.getElementById('taskbar-time').textContent = `${hours}:${minutes}:${seconds}`;
     }
+
+    // Afficher / cacher le menu Start au clic sur le bouton
+    document.querySelector('.start-menu-button').addEventListener('click', function(event) {
+      const startMenu = document.querySelector('.start-menu');
+      startMenu.style.display = startMenu.style.display === 'flex' ? 'none' : 'flex';
+      event.stopPropagation(); // Empêche la propagation du clic vers le document
+    });
+
+    // Fermer le menu Start si on clique en dehors de celui-ci
+    document.addEventListener('click', function(event) {
+      const startMenu = document.querySelector('.start-menu');
+      const startMenuButton = document.querySelector('.start-menu-button');
+      
+      if (!startMenu.contains(event.target) && event.target !== startMenuButton) {
+        startMenu.style.display = 'none';
+      }
+    });
 
     setInterval(updateTime, 1000);
-    updateTime(); // Appelle une fois au chargement
-      
-      async function sendMessage() {
-      const input = document.getElementById('chat-input');
-      const chatContent = document.getElementById('chat-content');
-      const message = input.value;
-      const csrfToken = getCookie('csrftoken');
-      if (message.trim()) {
-        chatContent.innerHTML += `<div>You: ${message}</div>`;
-        const response = await fetch('/chat-api/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
-          },
-          body: JSON.stringify({ message })
-        });
-        const data = await response.json();
-        const botMessage = data.response || "Sorry, I didn't understand that.";
-        chatContent.innerHTML += `<div>Bot: ${botMessage}</div>`;
-        input.value = '';
-        chatContent.scrollTop = chatContent.scrollHeight;
-      }
-    }
-
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.startsWith(name + '=')) {
-            cookieValue = decodeURIComponent(cookie.split('=')[1]);
-            break;
-          }
-        }
-      }
-      return cookieValue;
-    }
-
-    makeDraggable(document.getElementById('chat-window'));
-    makeDraggable(document.getElementById('agenda-window'));
-    makeDraggable(document.getElementById('flux-window'));
-    makeDraggable(document.getElementById('meteo-window'));
-    makeDraggable(document.getElementById('video-window'));
-    makeDraggable(document.getElementById('postit-window'));
-    makeDraggable(document.getElementById('terminal-window'));
-
   </script>
 </body>
 </html>
