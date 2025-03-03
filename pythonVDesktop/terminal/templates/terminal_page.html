@@ -25,6 +25,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            display: none; /* Hide the terminal by default */
         }
         .title-bar {
             background-color: #333333;
@@ -69,9 +70,18 @@
             color: #00ff00;
             outline: none;
         }
+        .toggle-button {
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
+    <button class="toggle-button">Ouvrir le terminal</button>
     <div class="window">
         <div class="title-bar">
             <div class="buttons">
@@ -94,50 +104,58 @@
     <script>
         const input = document.querySelector('.input');
         const output = document.querySelector('.output');
+        const windowElement = document.querySelector('.window');
+        const toggleButton = document.querySelector('.toggle-button');
 
         // Ajouter un message d'accueil à l'ouverture du terminal
-        const welcomeMessage = "Bienvenue dans le terminal, tapez 'commands help' pour voir la liste de commandes disponibles sur votre os !";
+        const welcomeMessage = "Bienvenue dans le terminal, tapez 'commands help' pour voir la liste de commandes disponibles sur votre système d'exploitation !";
         output.innerHTML += `<div>${welcomeMessage}</div>`;
 
         document.addEventListener("DOMContentLoaded", function() {
-        const input = document.querySelector('.input');
-        const output = document.querySelector('.output');
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    const command = input.value.trim();
+                    if (!command) return;
 
-        input.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                const command = input.value.trim();
-                if (!command) return;
+                    output.innerHTML += `<div>$ ${command}</div>`; // On laisse la commande affichée dans le terminal
+                    input.value = '';
+                    // Envoi de la commande à Django
+                    fetch('/terminal/execute/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ command: command })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        //Si les données sont sous forme de tableau
+                        if(data.output instanceof Array){
+                            data.output.forEach(element => {
+                                output.innerHTML += `<div style="color: green;">${element.replace(/\n/g, '<br>')}</div>`;
+                            });
+                        }
+                        else if(data.output){
+                            output.innerHTML += `<div style="color: green;">${data.output.replace(/\n/g, '<br>')}</div>`;
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Erreur fetch :", err);
+                        output.innerHTML += `<div style="color: red;">Erreur lors de l'exécution.</div>`;
+                    });
+                }
+            });
 
-                output.innerHTML += `<div>$ ${command}</div>`; // On laisse la commande affichée dans le terminal
-                input.value = '';
-                // Envoi de la commande à Django
-                fetch('/terminal/execute/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ command: command })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    //Si les données sont sous forme de tableau
-                    if(data.output instanceof Array){
-                        data.output.forEach(element => {
-                            output.innerHTML += `<div style="color: green;">${element.replace(/\n/g, '<br>')}</div>`;
-                        });
-                    }
-                    else if(data.output){
-                        output.innerHTML += `<div style="color: green;">${data.output.replace(/\n/g, '<br>')}</div>`;
-                    }
-                })
-                .catch(err => {
-                    console.error("Erreur fetch :", err);
-                    output.innerHTML += `<div style="color: red;">Erreur lors de l'exécution.</div>`;
-                });
-            }
+            toggleButton.addEventListener('click', function() {
+                if (windowElement.style.display === 'none') {
+                    windowElement.style.display = 'flex';
+                    toggleButton.textContent = 'Fermer le terminal';
+                } else {
+                    windowElement.style.display = 'none';
+                    toggleButton.textContent = 'Ouvrir le terminal';
+                }
+            });
         });
-    });
-
     </script>
 </body>
 </html>
