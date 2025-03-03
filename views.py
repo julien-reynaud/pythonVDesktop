@@ -7,7 +7,7 @@ import json
 
 
 def virtual_os(request):
-    return render(request, 'virtual_os.html')
+    return render(request, 'Bureau/templates/Bureau.html')
 
 def stock_data(request):
     symbol = request.GET.get('symbol', '')
