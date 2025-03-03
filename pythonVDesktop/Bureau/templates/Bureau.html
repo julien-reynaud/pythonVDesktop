@@ -435,6 +435,25 @@
       document.getElementById('jeu-window').style.display = 'none';
     }
 
+    function searchStock() {
+      const symbol = document.getElementById('stock-search').value;
+      fetch('/get_stock_data/' + symbol)
+      .then(response => response.json())
+      .then(data => {
+      if (data.error) {
+        document.getElementById('stock-result').innerText = 'Erreur : ' + data.error;
+      } 
+      else {
+        const price = data.c; // Assurez-vous que 'c' est la clé correcte pour le prix dans la réponse JSON
+        document.getElementById('stock-result').innerText = 'Prix de '+symbol+' : ' + price;
+        }
+      })
+      .catch(error => {
+        console.error('Erreur :', error);
+        document.getElementById('stock-result').innerText = 'Erreur : ' + error;
+      });
+    }
+
     function updateTime() {
       const date = new Date();
       const hours = String(date.getHours()).padStart(2, '0');
