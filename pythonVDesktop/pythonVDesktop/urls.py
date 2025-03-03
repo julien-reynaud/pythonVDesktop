@@ -31,4 +31,5 @@ urlpatterns = [
     path('flux/', include('flux.urls')),
     path('player_video/', include('player_video.urls')),
     path('jeu/', include("jeu.urls")),
+    path('explorer/', include('explorer.urls')),
 ]
