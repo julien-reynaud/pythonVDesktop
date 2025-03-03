@@ -29,3 +29,11 @@ def update_score(request):
         'player_score': request.session['player_score'],
         'computer_score': request.session['computer_score']
     })
+
+def reset_scores(request):
+    request.session['player_score'] = 0
+    request.session['computer_score'] = 0
+    return JsonResponse({
+        'player_score': 0,
+        'computer_score': 0
+    })
