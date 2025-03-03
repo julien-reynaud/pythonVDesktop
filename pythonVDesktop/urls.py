@@ -18,7 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+import Bureau
+from Bureau import views
+import views
+
 urlpatterns = [
+    path('Bureau/', include("Bureau.urls")),  # Route par défaut à la racine
+    path('stock-data/', views.stock_data, name='stock_data'),
+    path('chat-api/', views.chat_api, name='chat_api'),
     path("admin/", admin.site.urls),
     path('agenda/', include('agenda.urls')),
     path("meteo/", include("meteo.urls")),
