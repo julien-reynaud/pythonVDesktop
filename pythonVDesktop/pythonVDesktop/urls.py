@@ -24,11 +24,11 @@ urlpatterns = [
     path("terminal/", include("terminal.urls")),
     path("postits/", include("postits.urls")),
     path('Bureau/', include("Bureau.urls")),  # Route par défaut à la racine
-    #path('stock-data/', views.stock_data, name='stock_data'),
     #path('chat-api/', views.chat_api, name='chat_api'),
     path('agenda/', include('agenda.urls')),
     path("meteo/", include("meteo.urls")),
     path('flux/', include('flux.urls')),
     path('player_video/', include('player_video.urls')),
     path('jeu/', include("jeu.urls")),
+    path('get_stock_data/', include('StockData.urls')),
 ]
