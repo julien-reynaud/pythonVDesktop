@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# pythonVDesktop/settings.py
+
+YOUTUBE_API_KEY = 'AIzaSyCGgMmFbQTLgVsGi4vuQbZV7TruDOlwAQw'
 
 # Application definition
 
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
     "agenda",
     "meteo",
     "flux",
+    "player_video",
 ]
 
 MIDDLEWARE = [

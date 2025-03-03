@@ -6,3 +6,6 @@ pip install requests
 
 Pour flux:
 pip install requests
+
+Pour player_video:
+pip install google-api-python-client
