@@ -1,12 +1,16 @@
 import requests
 from django.http import JsonResponse
-from django.shortcuts import render
 
-# Create your views here.
-def stock_data(request):
-    symbol = request.GET.get('symbol', '')
-    if symbol:
-        response = requests.get(f"https://finnhub.io/api/v1/quote?symbol={symbol}&token=cuuejg1r01qlidi3j1e0cuuejg1r01qlidi3j1eg")
-        data = response.json()
-        return JsonResponse({'price': data.get('c', 'Données non disponibles')})
-    return JsonResponse({'error': 'Aucun symbole fourni'})
+def get_stock_data(request, symbol):
+    try:
+        api_key = 'cv2srqpr01qsrkiki6rgcv2srqpr01qsrkiki6s0'
+        url = f'https://finnhub.io/api/v1/quote?symbol={symbol}&token={api_key}'
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            return JsonResponse(response.json())
+        else:
+            return JsonResponse({'error': 'Impossible de récupérer les données'}, status=500)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
