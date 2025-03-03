@@ -178,16 +178,16 @@
     </div>
 
     <div id="stock-window" class="window">
-      <div class="window-header">
-        <span>Cours de la Bourse</span>
-        <button onclick="closeStockWindow()">X</button>
-      </div>
-      <div class="window-content" id="stock-content">
-        <input type="text" id="stock-search" placeholder="Entrez un symbole (ex: TSLA)">
-        <button onclick="searchStock()" style="margin-top: 10px">Rechercher</button>
-        <p id="stock-result">Chargement des données...</p>
-      </div>
-    </div>
+  <div class="window-header">
+    <span>Cours de la Bourse</span>
+    <button onclick="closeStockWindow()">X</button>
+  </div>
+  <div class="window-content" id="stock-content">
+    <input type="text" id="stock-search" placeholder="Entrez un symbole (ex: TSLA)">
+    <button onclick="searchStock()" style="margin-top: 10px">Rechercher</button>
+    <p id="stock-result">Chargement des données...</p>
+  </div>
+</div>
       
       <div id="chat-window" class="chat-window">
       <div class="window-header">
@@ -358,19 +358,21 @@
 
     function searchStock() {
   const symbol = document.getElementById('stock-search').value;
-  fetch(`/stock-data/?symbol=${symbol}`)
+  fetch('/get_stock_data/' + symbol)
     .then(response => response.json())
     .then(data => {
-      if (data.price) {
-        document.getElementById('stock-result').innerText = `Prix actuel de ${symbol.toUpperCase()} : ${data.price} $`;
+      if (data.error) {
+        document.getElementById('stock-result').innerText = 'Erreur : ' + data.error;
       } else {
-        document.getElementById('stock-result').innerText = 'Données non disponibles';
+        const price = data.c; // Assurez-vous que 'c' est la clé correcte pour le prix dans la réponse JSON
+        document.getElementById('stock-result').innerText = 'Prix de '+symbol+' : ' + price;
       }
     })
-    .catch(() => {
-      document.getElementById('stock-result').innerText = 'Erreur lors de la récupération des données';
+    .catch(error => {
+      console.error('Erreur :', error);
+      document.getElementById('stock-result').innerText = 'Erreur : ' + error;
     });
-    }
+}
       function makeDraggable(element) {
         let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
 
