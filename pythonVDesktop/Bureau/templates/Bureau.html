@@ -23,6 +23,10 @@
       justify-items: center;
       align-items: start;
       padding: 20px;
+      background-image: url('/static/bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
 
     .icon {
@@ -158,6 +162,11 @@
       <p>Terminal</p>
     </div>
 
+    <div class="icon" onclick="openJeuWindow()">
+      <img src="/static/ping-pong.png" alt="Game">
+      <p>Jeu</p>
+    </div>
+
     <div id="window" class="window">
       <div class="window-header">
         <span>File Explorer</span>
@@ -249,6 +258,15 @@
       </div>
     </div>
 
+    <div id="jeu-window" class="window large-window" style="width: 100%; height: 100%;">
+      <div class="window-header">
+          <span>Jeu</span>
+          <button onclick="closeJeuWindow()">X</button>
+      </div>
+      <div class="window-content">
+          <iframe width="100%" height="100%" src="{% url 'jeu:affiche_jeu' %}" frameborder="0"></iframe>
+      </div>
+    </div>
     
   </div>
 
@@ -328,6 +346,14 @@
 
     function closeTerminalWindow() {
       document.getElementById('terminal-window').style.display = 'none';
+    }
+
+    function openJeuWindow() {
+    document.getElementById('jeu-window').style.display = 'block';
+    }
+
+    function closeJeuWindow() {
+        document.getElementById('jeu-window').style.display = 'none';
     }
 
     function searchStock() {

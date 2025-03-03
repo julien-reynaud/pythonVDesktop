@@ -121,16 +121,16 @@
         // Envoie le mouvement au backend pour mettre à jour playerY
         function updatePlayerPosition() {
             if (moveUp) {
-                playerY = Math.max(0, playerY - 10);
+                playerY = Math.max(0, playerY - 5);
             }
             if (moveDown) {
-                playerY = Math.min(canvasHeight - playerHeight, playerY + 10);
+                playerY = Math.min(canvasHeight - playerHeight, playerY + 5);
             }
             if (moveUpComputer) {
-                computerY = Math.max(0, computerY - 10);
+                computerY = Math.max(0, computerY - 5);
             }
             if (moveDownComputer) {
-                computerY = Math.min(canvasHeight - playerHeight, computerY + 10);
+                computerY = Math.min(canvasHeight - playerHeight, computerY + 5);
             }
         }
 
