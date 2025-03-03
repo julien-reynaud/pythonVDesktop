@@ -1,1 +1,11 @@
+Pour le calendrier:
+npm install @fullcalendar/core @fullcalendar/daygrid @fullcalendar/interaction
 
+Pour la meteo:
+pip install requests
+
+Pour flux:
+pip install requests
+
+Pour player_video:
+pip install google-api-python-client

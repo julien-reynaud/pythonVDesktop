@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Météo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .weather-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            width: 300px;
+        }
+
+        .weather-icon {
+            width: 100px;
+        }
+
+        .temperature {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .description {
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 16px;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .close-btn:hover {
+            background-color: #e60000;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌍 Rechercher la météo</h1>
+
+    <!-- Formulaire pour sélectionner une ville -->
+    <form method="GET" action="">
+        <input type="text" name="city" placeholder="Entrez une ville" required>
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <div class="weather-container">
+        {% if weather %}
+            <h2>Météo à {{ weather.city }}</h2>
+            <img class="weather-icon" src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Icône météo">
+            <p class="temperature">{{ weather.temperature }}°C</p>
+            <p class="description">{{ weather.description|capfirst }}</p>
+        {% elif error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </div>
+
+    <button class="close-btn" onclick="window.location.href='/';">&times;</button>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-it Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+        .postit {
+            width: 200px;
+            height: 200px;
+            background-color: #ffeb3b;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: absolute;
+            cursor: move;
+        }
+        .postit textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: none;
+            resize: none;
+            font-size: 16px;
+        }
+        .postit button {
+            align-self: flex-end;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .add-postit {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button class="add-postit">Add Post-it</button>
+
+    <script>
+        let postitCount = 0;
+
+        async function addPostit() {
+            const response = await fetch('/postits/ajout_note/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+            });
+            const data = await response.json();
+            if (data.success) {
+                const postit = document.createElement('div');
+                postit.className = 'postit';
+                postit.style.top = `${postitCount * 10}px`;
+                postit.style.left = `${postitCount * 10}px`;
+                postit.innerHTML = `
+                    <textarea placeholder="Write your note here..."></textarea>
+                    <button>Delete</button>
+                `;
+                postit.querySelector('button').addEventListener('click', function() {
+                    document.body.removeChild(postit);
+                });
+                makeDraggable(postit);
+                document.body.appendChild(postit);
+                postitCount++;
+            }
+        }
+
+        function makeDraggable(element) {
+            let isDragging = false;
+            let offsetX, offsetY;
+
+            element.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+                element.style.zIndex = 1000;
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (isDragging) {
+                    element.style.left = `${e.clientX - offsetX}px`;
+                    element.style.top = `${e.clientY - offsetY}px`;
+                }
+            });
+
+            document.addEventListener('mouseup', function() {
+                isDragging = false;
+                element.style.zIndex = '';
+            });
+        }
+
+        document.querySelector('.add-postit').addEventListener('click', addPostit);
+    </script>
+</body>
+</html>

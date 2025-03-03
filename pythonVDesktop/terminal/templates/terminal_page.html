@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invite de commandes</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #00ff00;
+            font-family: monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .window {
+            width: 80%;
+            height: 80vh;
+            background-color: #000000;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            display: none; /* Hide the terminal by default */
+        }
+        .title-bar {
+            background-color: #333333;
+            color: #ffffff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .title-bar .buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .title-bar .button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ff5f56; /* Red button */
+        }
+        .title-bar .button:nth-child(2) {
+            background-color: #ffbd2e; /* Yellow button */
+        }
+        .title-bar .button:nth-child(3) {
+            background-color: #27c93f; /* Green button */
+        }
+        .terminal {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .input-line {
+            display: flex;
+        }
+        .input-line::before {
+            content: '$ ';
+            margin-right: 5px;
+        }
+        .input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #00ff00;
+            outline: none;
+        }
+        .toggle-button {
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button class="toggle-button">Ouvrir le terminal</button>
+    <div class="window">
+        <div class="title-bar">
+            <div class="buttons">
+                <div class="button"></div>
+                <div class="button"></div>
+                <div class="button"></div>
+            </div>
+            <div class="title">Invite de commandes</div>
+            <div></div>
+        </div>
+        <div class="terminal">
+            <div class="output">
+            </div>
+            <div class="input-line">
+                <input type="text" class="input" autofocus>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const input = document.querySelector('.input');
+        const output = document.querySelector('.output');
+        const windowElement = document.querySelector('.window');
+        const toggleButton = document.querySelector('.toggle-button');
+
+        // Ajouter un message d'accueil à l'ouverture du terminal
+        const welcomeMessage = "Bienvenue dans le terminal, tapez 'commands help' pour voir la liste de commandes disponibles sur votre système d'exploitation !";
+        output.innerHTML += `<div>${welcomeMessage}</div>`;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    const command = input.value.trim();
+                    if (!command) return;
+
+                    output.innerHTML += `<div>$ ${command}</div>`; // On laisse la commande affichée dans le terminal
+                    input.value = '';
+                    // Envoi de la commande à Django
+                    fetch('/terminal/execute/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ command: command })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        //Si les données sont sous forme de tableau
+                        if(data.output instanceof Array){
+                            data.output.forEach(element => {
+                                output.innerHTML += `<div style="color: green;">${element.replace(/\n/g, '<br>')}</div>`;
+                            });
+                        }
+                        else if(data.output){
+                            output.innerHTML += `<div style="color: green;">${data.output.replace(/\n/g, '<br>')}</div>`;
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Erreur fetch :", err);
+                        output.innerHTML += `<div style="color: red;">Erreur lors de l'exécution.</div>`;
+                    });
+                }
+            });
+
+            toggleButton.addEventListener('click', function() {
+                if (windowElement.style.display === 'none') {
+                    windowElement.style.display = 'flex';
+                    toggleButton.textContent = 'Fermer le terminal';
+                } else {
+                    windowElement.style.display = 'none';
+                    toggleButton.textContent = 'Ouvrir le terminal';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
