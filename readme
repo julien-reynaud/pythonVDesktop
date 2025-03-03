@@ -1,3 +1,6 @@
+Membres du groupe : Julien REYNAUD - Léo HERBER - Audren DELEPLANQUE - Coran RIZOUG 
+Numéro de groupe :  7
+
 Pour le calendrier:
 npm install @fullcalendar/core @fullcalendar/daygrid @fullcalendar/interaction
 
@@ -9,3 +12,9 @@ pip install requests
 
 Pour player_video:
 pip install google-api-python-client
+
+Applications non-disponibles : Bourse, Files, Chat Bot
+
+Url de l'application : http://localhost:8000/Bureau/
+
+Lançer le serveur : python manage.py runserver (exécuter dans le dossier pythonVDesktop/pythonVDesktop où se trouve le manage.py)
