@@ -110,6 +110,9 @@
             });
         }
 
+        // Ajouter un post-it automatiquement à l'ouverture de la page
+        document.addEventListener('DOMContentLoaded', addPostit);
+
         document.querySelector('.add-postit').addEventListener('click', addPostit);
     </script>
 </body>

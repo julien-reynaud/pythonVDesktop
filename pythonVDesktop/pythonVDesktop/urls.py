@@ -30,4 +30,5 @@ urlpatterns = [
     path("meteo/", include("meteo.urls")),
     path('flux/', include('flux.urls')),
     path('player_video/', include('player_video.urls')),
+    path('jeu/', include("jeu.urls")),
 ]

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Game</title>
+    <style>
+        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #000; }
+        canvas { background: #000; display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="pongCanvas" width="800" height="400"></canvas>
+    <div id="scoreboard" style="color: white; font-size: 24px; position: absolute; top: 20px;">Player: 0 - Computer: 0</div>
+
+    <script>
+        fetch('/jeu/get-scores/')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("scoreboard").innerText = 
+                `Player one : ${data.player_score} - Player two : ${data.computer_score}`;
+        });
+
+        const canvas = document.getElementById("pongCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Initialisation des variables
+        let playerY = parseInt("{{ initial_player_y }}") || 150;
+        let computerY = parseInt("{{ initial_computer_y }}") || 150;
+        let ballX = parseInt("{{ initial_ball_x }}") || canvas.width / 2;
+        let ballY = parseInt("{{ initial_ball_y }}") || canvas.height / 2;
+        let ballDX = parseInt("{{ initial_ball_dx }}") || 4;
+        let ballDY = parseInt("{{ initial_ball_dy }}") || 4;
+
+        const playerHeight = 100;
+        const paddleWidth = 10;
+        const ballRadius = 10;
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        let moveUp = false;
+        let moveDown = false;
+        let moveUpComputer = false;
+        let moveDownComputer = false;
+
+        // Dessine un rectangle (paddle)
+        function drawRect(x, y, w, h, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, w, h);
+        }
+
+        // Dessine un cercle (balle)
+        function drawCircle(x, y, r, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2, false);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Rafraîchit l'écran
+        function render() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            drawRect(0, playerY, paddleWidth, playerHeight, "#FFF"); // Joueur
+            drawRect(canvasWidth - paddleWidth, computerY, paddleWidth, playerHeight, "#FFF"); // IA
+            drawCircle(ballX, ballY, ballRadius, "#FFF"); // Balle
+        }
+
+        // Déplacement et gestion des collisions
+        function updatePositions() {
+            ballX += ballDX;
+            ballY += ballDY;
+
+            // Collision haut/bas
+            if (ballY - ballRadius <= 0 || ballY + ballRadius >= canvasHeight) {
+                ballDY = -ballDY;
+            }
+
+            // Collision avec le joueur
+            if (ballX - ballRadius <= paddleWidth &&
+                ballY >= playerY &&
+                ballY <= playerY + playerHeight) {
+                ballDX = -ballDX;
+            }
+
+            // Collision avec l'IA
+            if (ballX + ballRadius >= canvasWidth - paddleWidth &&
+                ballY >= computerY &&
+                ballY <= computerY + playerHeight) {
+                ballDX = -ballDX;
+            }
+
+            if (!manualControlComputer) {
+                if (computerY + playerHeight / 2 < ballY - 10) {
+                    computerY = Math.min(canvasHeight - playerHeight, computerY + 4);
+                } else if (computerY + playerHeight / 2 > ballY + 10) {
+                    computerY = Math.max(0, computerY - 4);
+                }
+            }
+
+            if (ballX < 0) {
+                updateScore('computer');
+                resetBall();
+            }
+            if (ballX > canvas.width) {
+                updateScore('player');
+                resetBall();
+            }
+        }
+
+        // Remettre la balle au centre
+        function resetBall() {
+            ballX = canvasWidth / 2;
+            ballY = canvasHeight / 2;
+            ballDX = 4 * (Math.random() > 0.5 ? 1 : -1);
+            ballDY = 4 * (Math.random() > 0.5 ? 1 : -1);
+        }
+
+        // Envoie le mouvement au backend pour mettre à jour playerY
+        function updatePlayerPosition() {
+            if (moveUp) {
+                playerY = Math.max(0, playerY - 10);
+            }
+            if (moveDown) {
+                playerY = Math.min(canvasHeight - playerHeight, playerY + 10);
+            }
+            if (moveUpComputer) {
+                computerY = Math.max(0, computerY - 10);
+            }
+            if (moveDownComputer) {
+                computerY = Math.min(canvasHeight - playerHeight, computerY + 10);
+            }
+        }
+
+        // Gestion des touches
+        let manualControlComputer = false;
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowUp") {
+                moveUp = true;
+            }
+            if (e.key === "ArrowDown") {
+                moveDown = true;
+            }
+
+            if (e.key === "z" || e.key === "Z") {
+                manualControlComputer = true;
+                moveUpComputer = true;
+            }
+            if (e.key === "s" || e.key === "S") {
+                manualControlComputer = true;
+                moveDownComputer = true;
+            }
+        });
+
+        document.addEventListener("keyup", (e) => {
+            if (e.key === "ArrowUp") {
+                moveUp = false;
+            }
+            if (e.key === "ArrowDown") {
+                moveDown = false;
+            }
+
+            if (e.key === "z" || e.key === "Z") {
+                moveUpComputer = false;
+            }
+            if (e.key === "s" || e.key === "S") {
+                moveDownComputer = false;
+            }
+        });
+
+        function updateScore(winner) {
+            fetch(`/jeu/update-score/?scorer=${winner}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("scoreboard").innerText = 
+                        `Player: ${data.player_score} - Computer: ${data.computer_score}`;
+                });
+        }
+
+        // Boucle du jeu
+        function gameLoop() {
+            updatePositions();
+            updatePlayerPosition();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>
